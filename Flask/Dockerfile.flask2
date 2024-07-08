@@ -1,0 +1,8 @@
+FROM kdcyberdude/salad_it_translate:serial
+
+RUN apt-get update && apt-get install -y net-tools
+
+WORKDIR /app
+COPY hello-flask.py /app
+
+CMD ["python", "hello-flask.py"]
