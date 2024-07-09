@@ -10,3 +10,4 @@ demo = gr.Interface(
 )
 
 demo.launch(server_name="[::]", server_port=5000)
+# "[::]", need to listen on IPv6 port to work with the container gateway

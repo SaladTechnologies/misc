@@ -17,4 +17,4 @@ def hello_world():
 
 if __name__ == '__main__':
     app.run(host="::", port = 8000) 
-    # need to listen on IPv6 port to work with the container gateway
+    # "::", need to listen on IPv6 port to work with the container gateway
