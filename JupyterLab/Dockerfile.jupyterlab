@@ -1,0 +1,11 @@
+from docker.io/pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime
+RUN apt-get update && apt-get install -y curl
+RUN pip install --upgrade pip
+
+RUN pip install jupyterlab
+RUN pip install ipywidgets
+
+RUN apt-get install -y net-tools
+
+CMD bash -c "jupyter lab --no-browser --port=8000  --ip=* --allow-root  --NotebookApp.token=''"
+
