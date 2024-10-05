@@ -1,0 +1,41 @@
+########## Build and push the image
+
+docker image build -t docker.io/saladtechnologies/misc:test -f Dockerfile .
+docker push docker.io/saladtechnologies/misc:test
+
+docker rmi $(docker images -f dangling=true -q)
+
+########## Run the image
+
+docker run --rm -it --gpus all -v ~/data:/app/data \
+ -e HOST="0.0.0.0" -e PORT="8888" \
+docker.io/saladtechnologies/misc:test
+
+########## Run the image (override the original CMD)
+
+docker run --rm -it --gpus all -p 8000:8888 \
+-e HOST="::" -e PORT="8888" \
+--entrypoint 'sh' docker.io/saladtechnologies/misc:test  -c 'python inference_server.py'
+
+docker run --rm -it --gpus all -p 8000:8888 \
+-e HOST="::" -e PORT="8888" \
+--entrypoint 'sh' docker.io/saladtechnologies/misc:test  -c 'sleep infinity'
+
+docker run --rm -it --gpus all -p 8000:8888 \
+-e HOST="::" -e PORT="8888" \
+docker.io/saladtechnologies/misc:test  /bin/bash
+
+########## Enter a running container
+
+$ docker ps
+CONTAINER ID   IMAGE                         COMMAND                  CREATED         STATUS         PORTS     NAMES
+1795c47bf07d   saladtechnologies/misc:test   "bash -c 'python inf…"   7 seconds ago   Up 7 seconds             keen_knuth
+
+$ docker exec -it 179 /bin/bash
+root@1795c47bf07d:/app#
+root@1795c47bf07d:/app# ls -ls
+total 16
+4 -rw-r--r-- 1 root root  852 Oct  5 16:07 Dockerfile
+4 -rw-r--r-- 1 root root  681 Sep 30 23:22 inference_server.py
+4 -rw-r--r-- 1 root root 1212 Oct  5 16:01 io_worker.py
+4 -rw-r--r-- 1 root root 1350 Oct  5 15:56 notes.txt
