@@ -1,0 +1,3 @@
+hypercorn
+fastapi
+httpx[http2]

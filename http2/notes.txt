@@ -1,0 +1,48 @@
+
+
+        10 concurrent requests over 1 TCP
+              (multiple HTTP/2 streams)
+
+                                    H2,443       __________   H2C, 8000
+HTTP/2 Client 1 (HTTPX, Async)  ----------------|          |
+                                     CRT        | HAProxy  |-----------------  A HTTP/2 Server (Hypercorn, FastAPI)
+HTTP/2 Client 2 (HTTPX, Async)  ----------------|          |
+                                                 __________
+        192.168.68.200                         192.168.68.177                   192.168.68.161 
+        192.168.68.201 
+
+        10 concurrent requests over 1 TCP
+              (multiple HTTP/2 streams)
+
+
+
+
+
+##### Key: Create in the Server -Hypercorn + FastAPI
+# openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+
+##### Key: Copy it to HAProxy
+# cat cert.pem key.pem > haproxy.pem
+# chmod 600 haproxy.pem
+# sudo mv haproxy.pem /etc/ssl/private/
+
+##### HAProxy: Install
+# sudo apt update
+# sudo apt show haproxy
+# sudo add-apt-repository ppa:vbernat/haproxy-2.6 -y
+# sudo apt update
+# sudo apt install -y haproxy=2.6.\*
+# haproxy -v
+# sudo systemctl status haproxy
+# sudo systemctl enable haproxy
+# systemctl status haproxy.service
+# journalctl -xeu haproxy.service
+
+##### HAProxy: Config
+# sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
+# sudo nano /etc/haproxy/haproxy.cfg
+# sudo systemctl restart haproxy
+
+##### HAProxy: Monitor
+# watch -n 1 netstat -t
+# http://localhost:8080/ # Monitor UI
