@@ -10,7 +10,7 @@ Both client.py and worker.py can run behind firewalls.
 
 The tasks.py module is imported by both client.py and worker.py, where it defines the implementation of the Fibonacci function.
 
-![use_case](ra_app1.png)
+![use_case](rq_app1.png)
 
 ### Referrence
 
