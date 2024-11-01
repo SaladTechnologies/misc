@@ -4,9 +4,7 @@ The Redis server is set up to listen on port 6379 at the IP address 192.168.68.1
 
 client.py, submit multiple jobs, then monitors their status and retrieves the results.
 
-worker.py, can be deployed across multiple nodes to process jobs concurrently.
-
-Both client.py and worker.py can run behind firewalls.
+worker.py, can be deployed across multiple nodes behind firewalls to process jobs concurrently.
 
 The tasks.py module is imported by both client.py and worker.py, where it defines the implementation of the Fibonacci function.
 
