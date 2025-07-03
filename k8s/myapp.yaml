@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: myapp
+  name: myapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: myapp
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - image: docker.io/saladtechnologies/misc:0.0.5-test
+        name: misc
+        imagePullPolicy: Always  # This forces Kubernetes to always pull the latest image
+        # command: ["sleep", "infinity"]  # Override Dockerfile CMD/ENTRYPOINT
+        resources: {}
+
+        volumeMounts: # bind mount
+        - name: host-volume-middle
+          mountPath: /app/local
+        - name: nfs-volume-middle
+          mountPath: /app/local1
+        - name: pvc-volume-middle  
+          mountPath: /app/local2
+
+      volumes:
+      - name: host-volume-middle
+        hostPath:
+          path: /home/ubuntu/share
+          type: Directory
+      - name: nfs-volume-middle
+        nfs:
+          server: ks # 192.168.68.173
+          path: /home/ubuntu/share1
+      - name: pvc-volume-middle        
+        persistentVolumeClaim:
+          claimName: myclaim 
+
+status: {}
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+  labels:
+    app: myapp
+spec:
+  type: NodePort
+  ports:
+  - port: 80 # Service端口
+    targetPort: 8888 # Pod端口
+    nodePort: 30080
+    protocol: TCP
+  selector:
+    app: myapp
